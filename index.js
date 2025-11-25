@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 // ========= Initialize Express app ========= //
 const app = express();
 const port = process.env.PORT || 5000;
@@ -49,7 +49,7 @@ async function run() {
             const { email } = req.query;
             // products?email=""&
             if (email) {
-                query.senderEmail = email;
+                query.userEmail  = email;
             }
             const options = { sort: { createdAt: -1 } }
 
