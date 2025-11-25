@@ -66,6 +66,30 @@ async function run() {
             res.send(result);
         });
 
+        // // GET: Get latest 6 Bills (sorted by date)
+        // app.get("/latest-products", async (req, res) => {
+        //     const cursor = productsCollection.find().sort({ date: -1 }).limit(6);
+        //     const result = await cursor.toArray();
+        //     res.send(result);
+        // });
+        
+        // GET: Get latest 6 Bills (sorted by date)
+        app.get("/latest-products", async (req, res) => {
+            const products = await productsCollection.find().toArray();
+
+            // Convert 'dd/mm/yyyy' to Date and sort
+            products.sort((a, b) => {
+                const [dayA, monthA, yearA] = a.createdAt.split("/").map(Number);
+                const [dayB, monthB, yearB] = b.createdAt.split("/").map(Number);
+                const dateA = new Date(yearA, monthA - 1, dayA);
+                const dateB = new Date(yearB, monthB - 1, dayB);
+                return dateB - dateA; // descending
+            });
+
+            res.send(products.slice(0, 6)); 
+        });
+
+
 
         // Create or Post one Data to the Database
         app.post("/products", async (req, res) => {
