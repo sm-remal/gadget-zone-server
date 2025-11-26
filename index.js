@@ -49,7 +49,7 @@ async function run() {
             const { email } = req.query;
             // products?email=""&
             if (email) {
-                query.userEmail  = email;
+                query.userEmail = email;
             }
             const options = { sort: { createdAt: -1 } }
 
@@ -72,7 +72,7 @@ async function run() {
         //     const result = await cursor.toArray();
         //     res.send(result);
         // });
-        
+
         // GET: Get latest 6 Bills (sorted by date)
         app.get("/latest-products", async (req, res) => {
             const products = await productsCollection.find().toArray();
@@ -86,7 +86,7 @@ async function run() {
                 return dateB - dateA; // descending
             });
 
-            res.send(products.slice(0, 6)); 
+            res.send(products.slice(0, 6));
         });
 
 
@@ -104,6 +104,14 @@ async function run() {
             const result = await productsCollection.insertOne(product);
             res.send(result);
         })
+
+        // Delete a specific paid bill 
+        app.delete("/products/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await productsCollection.deleteOne(query);
+            res.send(result);
+        });
 
 
         await client.db("admin").command({ ping: 1 });
